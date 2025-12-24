@@ -6,7 +6,7 @@ import org.one.corporatesocialmediaapp_backend.Enums.Position;
 import java.time.LocalDateTime;
 
 public record UserProfileResponse(
-        Long id,
+        Long userId,
         String username,
         String fullName,
         String profilePicture,
