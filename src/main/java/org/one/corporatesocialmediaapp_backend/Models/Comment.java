@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
+import java.util.UUID;
 
 @Entity
 @Table(name = "comments")
@@ -18,6 +20,9 @@ public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false, updatable = false, unique = true)
+    private UUID Comment_id = UUID.randomUUID();
 
     @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
@@ -33,5 +38,17 @@ public class Comment {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id", nullable = false)
     private Post post;
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Comment comment = (Comment) o;
+        return Objects.equals(Comment_id, comment.Comment_id) && Objects.equals(author, comment.author) && Objects.equals(post, comment.post);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(Comment_id, author, post);
+    }
 }
 

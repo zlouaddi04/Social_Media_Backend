@@ -9,9 +9,9 @@ import org.one.corporatesocialmediaapp_backend.Enums.Department;
 import org.one.corporatesocialmediaapp_backend.Enums.Position;
 import org.one.corporatesocialmediaapp_backend.Enums.Role;
 
+import javax.print.attribute.HashPrintJobAttributeSet;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Table(name = "users")
@@ -22,7 +22,10 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userId;
+    private Long User_db_Id;
+
+    @Column(nullable = false, updatable = false, unique = true)
+    private UUID User_id = UUID.randomUUID();
 
     @Column(unique = true, nullable = false, length = 50)
     private String username;
@@ -52,21 +55,32 @@ public class User {
     private LocalDateTime createdAt;
 
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Post> posts = new ArrayList<>();
+    private Set<Post> posts = new HashSet<>();
 
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Comment> comments = new ArrayList<>();
+    private Set<Comment> comments = new HashSet<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Like> likes = new ArrayList<>();
+    private Set<Like> likes = new HashSet<>();
 
     // Connections where this user is the follower
     @OneToMany(mappedBy = "follower", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Connection> following = new ArrayList<>();
+    private Set<Connection> following = new HashSet<>();
 
     // Connections where this user is being followed
     @OneToMany(mappedBy = "following", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Connection> followers = new ArrayList<>();
+    private Set<Connection> followers = new HashSet<>();
 
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(User_id, user.User_id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(User_id);
+    }
 }
 

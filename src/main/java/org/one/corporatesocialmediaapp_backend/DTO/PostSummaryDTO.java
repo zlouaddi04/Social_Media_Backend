@@ -7,9 +7,9 @@ public record PostSummaryDTO(
         String content,
         String imageUrl,
         LocalDateTime createdAt,
-        UserSummaryDTO author,
-        Long likeCount,
-        Long commentCount,
+        Long author_id,
+        Integer likeCount,
+        Integer commentCount,
         Boolean isLikedByCurrentUser
 ) {
 }

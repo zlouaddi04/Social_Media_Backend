@@ -4,13 +4,13 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 public record CreatePostRequest(
-        @NotNull
-        Long userId,
+        @NotNull(message = "User ID is required")
+        Long user_db_Id,
 
-        @NotBlank
+        @NotBlank(message = "Content is required and cannot be blank")
         String content,
 
-        @NotBlank
+        @NotBlank(message = "Image URL is required and cannot be blank")
         String imageUrl
 ) {
 }

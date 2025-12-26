@@ -10,8 +10,8 @@ public class DTOMapper {
 
     // ==========USER==========
 
-    public User toUserEntity(UserRegistrationRequest Request){
-        User user=new User();
+    public User toUserEntity(UserRegistrationRequest Request) {
+        User user = new User();
         user.setUsername(Request.username());
         user.setPassword(Request.password());
         user.setFullName(Request.fullName());
@@ -22,9 +22,9 @@ public class DTOMapper {
         return user;
     }
 
-    public UserSummaryDTO toUserSummaryDTO(User user){
-        UserSummaryDTO userSummaryDTO=new UserSummaryDTO(
-                user.getUserId(),
+    public UserSummaryDTO toUserSummaryDTO(User user) {
+        UserSummaryDTO userSummaryDTO = new UserSummaryDTO(
+                user.getUser_db_Id(),
                 user.getUsername(),
                 user.getFullName(),
                 user.getProfilePicture(),
@@ -35,9 +35,10 @@ public class DTOMapper {
         );
         return userSummaryDTO;
     }
-    public User UserUpdateRequest(UserUpdateRequest Request){
-        User user =new User();
-        user.setUserId((Request.userId()));
+
+    public User UserUpdateRequest(UserUpdateRequest Request) {
+        User user = new User();
+        user.setUser_db_Id((Request.userId()));
         user.setFullName(Request.fullName());
         user.setProfilePicture(Request.profilePicture());
         user.setPosition(Request.position());
@@ -45,17 +46,17 @@ public class DTOMapper {
         return user;
     }
 
-    public UserProfileResponse toUserProfileResponse(User user){
-        UserProfileResponse userProfileResponse=new UserProfileResponse(
-                user.getUserId(),
+    public UserProfileResponse toUserProfileResponse(User user) {
+        UserProfileResponse userProfileResponse = new UserProfileResponse(
+                user.getUser_db_Id(),
                 user.getUsername(),
                 user.getFullName(),
                 user.getProfilePicture(),
                 user.getPosition(),
                 user.getDepartment(),
                 user.getCreatedAt(),
-                null,
-                null,
+                user.getFollowers().size(),
+                user.getFollowing().size(),
                 null
 
         );
@@ -63,19 +64,46 @@ public class DTOMapper {
     }
 
 
-
-
-
     // ==========POST==========
 
 
-
-    public Post toPostEntity(CreatePostRequest request){
-        Post post=new Post();
+    public Post toPostEntity(CreatePostRequest request) {
+        Post post = new Post();
         post.setContent(request.content());
         post.setImageUrl(request.imageUrl());
         post.setCreatedAt(LocalDateTime.now());
         post.setUpdatedAt(LocalDateTime.now());
         return post;
     }
+
+    public PostSummaryDTO toPostSummaryDTO(Post post) {
+        return new PostSummaryDTO(
+                post.getPost_db_id(),
+                post.getContent(),
+                post.getImageUrl(),
+                post.getCreatedAt(),
+                post.getAuthor().getUser_db_Id(),
+                post.getLikes().size(),
+                post.getComments().size(),
+                null
+        );
+    }
+
+    public PostResponse toPostResponse(Post post) {
+        return new PostResponse(
+                post.getPost_db_id(),
+                post.getContent(),
+                post.getImageUrl(),
+                post.getCreatedAt(),
+                post.getUpdatedAt(),
+                post.getAuthor().getUser_db_Id(),
+                post.getLikes().size(),
+                post.getComments().size(),
+                null,
+                null
+        );
+    }
+
+
+
 }

@@ -13,8 +13,8 @@ public record UserProfileResponse(
         Position position,
         Department department,
         LocalDateTime createdAt,
-        Long followerCount,
-        Long followingCount,
+        Integer followerCount,
+        Integer followingCount,
         Boolean isFollowing
 ) {
 }

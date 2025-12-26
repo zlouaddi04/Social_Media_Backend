@@ -6,19 +6,19 @@ import org.one.corporatesocialmediaapp_backend.Enums.Department;
 import org.one.corporatesocialmediaapp_backend.Enums.Position;
 
 public record UserUpdateRequest(
-        @NotNull
+        @NotNull(message = "User ID is required")
         Long userId,
 
-        @NotBlank
+        @NotBlank(message = "Full name is required and cannot be blank")
         String fullName,
 
-        @NotBlank
+        @NotBlank(message = "Profile picture is required and cannot be blank")
         String profilePicture,
 
-        @NotNull
+        @NotNull(message = "Position is required")
         Position position,
 
-        @NotNull
+        @NotNull(message = "Department is required")
         Department department
 ) {
 }
