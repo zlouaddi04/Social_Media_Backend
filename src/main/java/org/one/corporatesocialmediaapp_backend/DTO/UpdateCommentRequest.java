@@ -7,9 +7,6 @@ public record UpdateCommentRequest(
         @NotBlank(message = "Content is required and cannot be blank")
         String content,
 
-        @NotNull(message = "Post ID is required")
-        Long postId,
-
         @NotNull(message = "Comment ID is required")
         Long commentId
 ) {

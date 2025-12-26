@@ -6,8 +6,7 @@ public record CommentResponse(
         Long id,
         String content,
         LocalDateTime createdAt,
-        UserSummaryDTO author,
-        Long likeCount,
+        UserSummaryDTO userSummary,
         Boolean isCommentOwner
 ) {
 }

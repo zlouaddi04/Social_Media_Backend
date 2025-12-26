@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotNull;
 public record UpdatePostRequest(
         @NotNull(message = "Post ID is required")
         @Min(value = 1, message = "Post ID must be at least 1")
-        Long db_id,
+        Long post_db_id,
 
         @NotBlank(message = "Content is required and cannot be blank")
         String content,

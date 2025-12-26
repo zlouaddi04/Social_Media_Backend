@@ -19,7 +19,7 @@ public class Comment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long Comment_db_id;
 
     @Column(nullable = false, updatable = false, unique = true)
     private UUID Comment_id = UUID.randomUUID();

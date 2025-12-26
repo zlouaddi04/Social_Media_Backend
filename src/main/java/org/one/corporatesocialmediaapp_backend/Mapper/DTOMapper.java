@@ -1,6 +1,7 @@
 package org.one.corporatesocialmediaapp_backend.Mapper;
 
 import org.one.corporatesocialmediaapp_backend.DTO.*;
+import org.one.corporatesocialmediaapp_backend.Models.Comment;
 import org.one.corporatesocialmediaapp_backend.Models.Post;
 import org.one.corporatesocialmediaapp_backend.Models.User;
 
@@ -26,12 +27,7 @@ public class DTOMapper {
         UserSummaryDTO userSummaryDTO = new UserSummaryDTO(
                 user.getUser_db_Id(),
                 user.getUsername(),
-                user.getFullName(),
-                user.getProfilePicture(),
-                user.getPosition(),
-                user.getDepartment(),
-                null,
-                null
+                user.getFullName()
         );
         return userSummaryDTO;
     }
@@ -81,10 +77,6 @@ public class DTOMapper {
                 post.getPost_db_id(),
                 post.getContent(),
                 post.getImageUrl(),
-                post.getCreatedAt(),
-                post.getAuthor().getUser_db_Id(),
-                post.getLikes().size(),
-                post.getComments().size(),
                 null
         );
     }
@@ -104,6 +96,34 @@ public class DTOMapper {
         );
     }
 
+    public Post toUpdatedpost(UpdatePostRequest Request) {
+        Post post = new Post();
+        post.setPost_db_id(Request.post_db_id());
+        post.setContent(Request.content());
+        post.setImageUrl(Request.imageUrl());
+        return post;
+    }
+
+    // ==========COMMENTS==========
+
+    public Comment toCommentEntity(CreateCommentRequest request) {
+        Comment comment = new Comment();
+        comment.setContent(request.content());
+        comment.setCreatedAt(LocalDateTime.now());
+        return comment;
+
+    }
+
+    public CommentResponse toCommentResponse(Comment comment,User author,User currentUser) {
+        return new CommentResponse(
+                comment.getComment_db_id(),
+                comment.getContent(),
+                comment.getCreatedAt(),
+                toUserSummaryDTO(author),
+                author.equals(currentUser)
+
+        );
+    }
 
 
 }
