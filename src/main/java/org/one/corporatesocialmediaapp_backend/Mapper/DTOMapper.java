@@ -1,11 +1,10 @@
 package org.one.corporatesocialmediaapp_backend.Mapper;
 
 import org.one.corporatesocialmediaapp_backend.DTO.*;
-import org.one.corporatesocialmediaapp_backend.Models.Comment;
-import org.one.corporatesocialmediaapp_backend.Models.Post;
-import org.one.corporatesocialmediaapp_backend.Models.User;
+import org.one.corporatesocialmediaapp_backend.Models.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class DTOMapper {
 
@@ -24,12 +23,11 @@ public class DTOMapper {
     }
 
     public UserSummaryDTO toUserSummaryDTO(User user) {
-        UserSummaryDTO userSummaryDTO = new UserSummaryDTO(
+        return new UserSummaryDTO(
                 user.getUser_db_Id(),
                 user.getUsername(),
                 user.getFullName()
         );
-        return userSummaryDTO;
     }
 
     public User UserUpdateRequest(UserUpdateRequest Request) {
@@ -42,7 +40,7 @@ public class DTOMapper {
         return user;
     }
 
-    public UserProfileResponse toUserProfileResponse(User user) {
+    public UserProfileResponse toUserProfileResponse(User user,User currentUser) {
         UserProfileResponse userProfileResponse = new UserProfileResponse(
                 user.getUser_db_Id(),
                 user.getUsername(),
@@ -53,7 +51,9 @@ public class DTOMapper {
                 user.getCreatedAt(),
                 user.getFollowers().size(),
                 user.getFollowing().size(),
-                null
+                currentUser.getFollowing()
+                        .stream()
+                        .anyMatch(Conn->Conn.getFollowing().getUser_db_Id().equals(user.getUser_db_Id()))
 
         );
         return userProfileResponse;
@@ -72,16 +72,16 @@ public class DTOMapper {
         return post;
     }
 
-    public PostSummaryDTO toPostSummaryDTO(Post post) {
+    public PostSummaryDTO toPostSummaryDTO(Post post,User post_author) {
         return new PostSummaryDTO(
                 post.getPost_db_id(),
                 post.getContent(),
                 post.getImageUrl(),
-                null
+                toUserSummaryDTO(post_author)
         );
     }
 
-    public PostResponse toPostResponse(Post post) {
+    public PostResponse toPostResponse(Post post, User Curent_user, List<CommentResponse> comments) {
         return new PostResponse(
                 post.getPost_db_id(),
                 post.getContent(),
@@ -91,8 +91,11 @@ public class DTOMapper {
                 post.getAuthor().getUser_db_Id(),
                 post.getLikes().size(),
                 post.getComments().size(),
-                null,
-                null
+                post.getLikes()
+                        .stream()
+                        .anyMatch(like-> like.getUser().getUser_db_Id().equals(Curent_user.getUser_db_Id())),
+                comments
+
         );
     }
 
@@ -124,6 +127,36 @@ public class DTOMapper {
 
         );
     }
+
+    public Comment UpdatedComment(UpdateCommentRequest request) {
+        Comment comment = new Comment();
+        comment.setComment_db_id(request.commentId());
+        comment.setContent(request.content());
+        return comment;
+    }
+
+    // ==========LIKES==========
+
+    public LikeResponse toLikeResponse(Like like) {
+        return new LikeResponse(
+                toUserSummaryDTO(like.getUser()),
+                like.getCreatedAt()
+        );
+    }
+
+    // ==========CONNECTION==========
+
+    public ConnectionResponse toConnectionResponse(Connection connection) {
+        return new ConnectionResponse(
+                connection.getId(),
+                toUserSummaryDTO(connection.getFollower()),
+                toUserSummaryDTO(connection.getFollowing()),
+                connection.getCreatedAt()
+
+        );
+    }
+
+
 
 
 }
