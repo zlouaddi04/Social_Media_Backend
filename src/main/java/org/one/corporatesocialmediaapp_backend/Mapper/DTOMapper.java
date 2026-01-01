@@ -2,10 +2,12 @@ package org.one.corporatesocialmediaapp_backend.Mapper;
 
 import org.one.corporatesocialmediaapp_backend.DTO.*;
 import org.one.corporatesocialmediaapp_backend.Models.*;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Component
 public class DTOMapper {
 
     // ==========USER==========
