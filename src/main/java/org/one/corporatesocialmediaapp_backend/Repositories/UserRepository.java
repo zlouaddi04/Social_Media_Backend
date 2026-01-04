@@ -1,6 +1,7 @@
 package org.one.corporatesocialmediaapp_backend.Repositories;
 
 import org.one.corporatesocialmediaapp_backend.DTO.FollowerListResponse;
+import org.one.corporatesocialmediaapp_backend.DTO.FollowingListResponse;
 import org.one.corporatesocialmediaapp_backend.DTO.UserSummaryDTO;
 import org.one.corporatesocialmediaapp_backend.Models.User;
 import org.springframework.data.domain.Pageable;
@@ -73,6 +74,36 @@ public interface UserRepository extends JpaRepository<User, Long> {
     List<FollowerListResponse> findMyFollowers(
             @Param("currentUserId") Long currentUserId
     );
+
+
+    @Query("""
+    SELECT new org.one.corporatesocialmediaapp_backend.DTO.FollowerListResponse(
+        new org.one.corporatesocialmediaapp_backend.DTO.UserSummaryDTO(
+            following.User_db_Id,
+            following.username,
+            following.fullName
+        ),
+        conn.createdAt,
+        CASE
+            WHEN EXISTS (
+                SELECT c2
+                FROM Connection c2
+                WHERE c2.follower.User_db_Id = :currentUserId
+                  AND c2.following.User_db_Id = following.User_db_Id
+            )
+            THEN true
+            ELSE false
+        END
+    )
+    FROM Connection conn
+    JOIN conn.following following
+    WHERE conn.follower.User_db_Id = :currentUserId
+""")
+    List<FollowingListResponse> findMyFollowings(
+            @Param("currentUserId") Long currentUserId
+    );
+
+
 
 
 

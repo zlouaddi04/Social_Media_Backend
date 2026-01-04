@@ -7,9 +7,8 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.one.corporatesocialmediaapp_backend.Enums.Department;
 import org.one.corporatesocialmediaapp_backend.Enums.Position;
-import org.one.corporatesocialmediaapp_backend.Enums.Role;
 
-import javax.print.attribute.HashPrintJobAttributeSet;
+
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -49,6 +48,7 @@ public class User {
     @Enumerated(EnumType.STRING)
     @Column(length = 50)
     private Department department;
+
 
     @CreationTimestamp
     @Column(nullable = false, updatable = false)

@@ -77,6 +77,13 @@ public class UserService {
         return userRepository.findMyFollowers(userID);
     }
 
+    public List<FollowingListResponse> getFollowings(Long userID){
+        if (!userRepository.existsById(userID)){
+            throw new UserNotFoundException("User not found");
+        }
+        return userRepository.findMyFollowings(userID);
+    }
+
 
 
 
@@ -126,6 +133,8 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
     }
+
+
 
 
 
