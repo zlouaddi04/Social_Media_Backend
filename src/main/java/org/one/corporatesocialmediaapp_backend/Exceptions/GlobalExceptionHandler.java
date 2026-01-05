@@ -4,6 +4,8 @@ package org.one.corporatesocialmediaapp_backend.Exceptions;
 import org.hibernate.exception.ConstraintViolationException;
 import org.one.corporatesocialmediaapp_backend.DTO.ErrorResponse;
 import org.one.corporatesocialmediaapp_backend.Enums.ErrorCodes;
+import org.one.corporatesocialmediaapp_backend.Exceptions.StorageExceptions.ImageUploadException;
+import org.one.corporatesocialmediaapp_backend.Exceptions.StorageExceptions.InvalidImageException;
 import org.one.corporatesocialmediaapp_backend.Exceptions.UserExceptions.UserAlreadyExists;
 import org.one.corporatesocialmediaapp_backend.Exceptions.UserExceptions.UserEmailAlreadyExists;
 import org.one.corporatesocialmediaapp_backend.Exceptions.UserExceptions.UserNotFoundException;
@@ -60,6 +62,31 @@ public class GlobalExceptionHandler {
                 LocalTime.now()
         );
         return ResponseEntity.status(HttpStatus.CONFLICT).body(Error);
+    }
+
+
+
+    // ==========STORAGE_EXCEPTIONS==========
+
+    @ExceptionHandler(InvalidImageException.class)
+    public  ResponseEntity<ErrorResponse>  handleInvalidImageException(InvalidImageException ex){
+        ErrorResponse Error=new ErrorResponse(
+                ex.getMessage(),
+                ErrorCodes.INVALID_IMAGE,
+                LocalTime.now()
+        );
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Error);
+
+    }
+
+    @ExceptionHandler(ImageUploadException.class)
+    public ResponseEntity<ErrorResponse>  handleImageUploadException(ImageUploadException ex){
+        ErrorResponse Error=new ErrorResponse(
+                ex.getMessage(),
+                ErrorCodes.IMAGE_UPLOAD_ERROR,
+                LocalTime.now()
+        );
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Error);
     }
 
 

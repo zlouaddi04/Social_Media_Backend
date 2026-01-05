@@ -35,7 +35,6 @@ public class DTOMapper {
     public User UserUpdateRequest(UserUpdateRequest Request,User user) {
         user.setUser_db_Id((Request.userId()));
         user.setFullName(Request.fullName());
-        user.setProfilePicture(Request.profilePicture());
         user.setPosition(Request.position());
         user.setDepartment(Request.department());
         return user;

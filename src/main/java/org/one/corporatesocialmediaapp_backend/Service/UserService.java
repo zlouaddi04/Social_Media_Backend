@@ -8,13 +8,13 @@ import org.one.corporatesocialmediaapp_backend.Exceptions.UserExceptions.UserUse
 import org.one.corporatesocialmediaapp_backend.Mapper.DTOMapper;
 import org.one.corporatesocialmediaapp_backend.Models.User;
 import org.one.corporatesocialmediaapp_backend.Repositories.UserRepository;
-import org.springframework.data.domain.PageRequest;
+import org.one.corporatesocialmediaapp_backend.Service.StorageService.ImageStorage;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,6 +25,7 @@ public class UserService {
     final UserRepository userRepository;
     final DTOMapper dtoMapper;
     final PasswordEncoder passwordEncoder;
+    final ImageStorage  imageStorage;
 
 
 
@@ -88,7 +89,7 @@ public class UserService {
 
 
     @Transactional
-    public UserSummaryDTO regiterUser(UserRegistrationRequest Request){
+    public UserSummaryDTO regiterUser(MultipartFile profilePicture, UserRegistrationRequest Request){
         if (userRepository.existsByEmail(Request.email()))
             throw new UserEmailAlreadyExists("Email already used");
         if (userRepository.existsByUsername(Request.username()))
@@ -96,6 +97,10 @@ public class UserService {
 
         //MAPPING_TO_USER
         User newUser=dtoMapper.toUserEntity(Request);
+
+        //STORING_PROFILE_PICTURE
+        String imageURL=imageStorage.uploadProfilePicture(profilePicture);
+        newUser.setProfilePicture(imageURL);
 
         //HASHING_PASSWORD
         String hashed_password= passwordEncoder.encode(Request.password());
