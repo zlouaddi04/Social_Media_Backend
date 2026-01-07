@@ -31,13 +31,13 @@ public class UserService {
 
 
 
-    public boolean AuthenticateUser(String username, String password) {
-        Optional<User> optionnalUser=userRepository.findByUsername(username);
+    public boolean AuthenticateUser(UserLoginRequest userLoginRequest) {
+        Optional<User> optionnalUser=userRepository.findByUsername(userLoginRequest.username());
         if (optionnalUser.isEmpty()) {
-            throw new UserNotFoundException("User with username " + username + " not found");
+            throw new UserNotFoundException("User with username " + userLoginRequest.username() + " not found");
         }
         User user=optionnalUser.get();
-        return passwordEncoder.matches(password, user.getPassword());
+        return passwordEncoder.matches(userLoginRequest.password(), user.getPassword());
 
     }
 
