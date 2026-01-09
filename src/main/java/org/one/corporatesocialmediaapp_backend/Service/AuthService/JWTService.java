@@ -1,4 +1,4 @@
-package org.one.corporatesocialmediaapp_backend.Service;
+package org.one.corporatesocialmediaapp_backend.Service.AuthService;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

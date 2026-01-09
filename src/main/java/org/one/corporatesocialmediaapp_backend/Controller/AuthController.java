@@ -1,10 +1,10 @@
-package org.one.corporatesocialmediaapp_backend;
+package org.one.corporatesocialmediaapp_backend.Controller;
 
 
 import lombok.AllArgsConstructor;
 import org.one.corporatesocialmediaapp_backend.DTO.UserLoginRequest;
 import org.one.corporatesocialmediaapp_backend.Models.CustomUserDetails;
-import org.one.corporatesocialmediaapp_backend.Service.JWTService;
+import org.one.corporatesocialmediaapp_backend.Service.AuthService.JWTService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
