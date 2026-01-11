@@ -1,6 +1,7 @@
 package org.one.corporatesocialmediaapp_backend.Controller;
 
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.one.corporatesocialmediaapp_backend.DTO.UserLoginRequest;
 import org.one.corporatesocialmediaapp_backend.Models.CustomUserDetails;
@@ -11,24 +12,21 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.stereotype.Repository;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.Duration;
 import java.util.Map;
 
-@Repository
+@RestController
 @AllArgsConstructor
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
 public class AuthController {
 
-    final AuthenticationManager authenticationManager;
-    final JWTService jwtService;
+    private final AuthenticationManager authenticationManager;
+    private final JWTService jwtService;
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody UserLoginRequest request) {
+    public ResponseEntity<?> login(@Valid @RequestBody UserLoginRequest request) {
 
         Authentication auth = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -50,7 +48,7 @@ public class AuthController {
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, cookie.toString())
-                .body(Map.of("message", "Login successful"));
+                .body(Map.of("message", "Login successful", "token", jwt));
     }
 
 }

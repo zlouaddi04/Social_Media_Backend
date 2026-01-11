@@ -4,21 +4,16 @@ package org.one.corporatesocialmediaapp_backend.Exceptions;
 import org.hibernate.exception.ConstraintViolationException;
 import org.one.corporatesocialmediaapp_backend.DTO.ErrorResponse;
 import org.one.corporatesocialmediaapp_backend.Enums.ErrorCodes;
-import org.one.corporatesocialmediaapp_backend.Exceptions.CommentExceptions.CommentContentEmptyException;
-import org.one.corporatesocialmediaapp_backend.Exceptions.CommentExceptions.CommentDeleteNotAllowedException;
-import org.one.corporatesocialmediaapp_backend.Exceptions.CommentExceptions.CommentNotFoundException;
+import org.one.corporatesocialmediaapp_backend.Exceptions.CommentExceptions.*;
+import org.one.corporatesocialmediaapp_backend.Exceptions.ConnectionExceptions.ConnectionAlreadyExistsException;
+import org.one.corporatesocialmediaapp_backend.Exceptions.ConnectionExceptions.ConnectionNotFoundException;
+import org.one.corporatesocialmediaapp_backend.Exceptions.ConnectionExceptions.FollowSelfNotAllowedException;
 import org.one.corporatesocialmediaapp_backend.Exceptions.LikeExceptions.LikeAlreadyExistsException;
 import org.one.corporatesocialmediaapp_backend.Exceptions.LikeExceptions.LikeNotFoundException;
-import org.one.corporatesocialmediaapp_backend.Exceptions.PostExceptions.PostContentEmptyException;
-import org.one.corporatesocialmediaapp_backend.Exceptions.PostExceptions.PostDeleteNotAllowedException;
-import org.one.corporatesocialmediaapp_backend.Exceptions.PostExceptions.PostNotFoundException;
-import org.one.corporatesocialmediaapp_backend.Exceptions.PostExceptions.PostUpdateNotAllowedException;
+import org.one.corporatesocialmediaapp_backend.Exceptions.PostExceptions.*;
 import org.one.corporatesocialmediaapp_backend.Exceptions.StorageExceptions.ImageUploadException;
 import org.one.corporatesocialmediaapp_backend.Exceptions.StorageExceptions.InvalidImageException;
-import org.one.corporatesocialmediaapp_backend.Exceptions.UserExceptions.UserAlreadyExists;
-import org.one.corporatesocialmediaapp_backend.Exceptions.UserExceptions.UserEmailAlreadyExists;
-import org.one.corporatesocialmediaapp_backend.Exceptions.UserExceptions.UserNotFoundException;
-import org.one.corporatesocialmediaapp_backend.Exceptions.UserExceptions.UserUsernameAlreadyExists;
+import org.one.corporatesocialmediaapp_backend.Exceptions.UserExceptions.*;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -170,6 +165,39 @@ public class GlobalExceptionHandler {
                 LocalTime.now()
         );
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Error);
+    }
+
+
+    // ==========CONNECTION_EXCEPTIONS==========
+
+    @ExceptionHandler(ConnectionAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponse> handleConnectionAlreadyExistsException(ConnectionAlreadyExistsException ex) {
+        ErrorResponse Error = new ErrorResponse(
+                ex.getMessage(),
+                ErrorCodes.FOLLOW_ALREADY_EXISTS,
+                LocalTime.now()
+        );
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(Error);
+    }
+
+    @ExceptionHandler(ConnectionNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleConnectionNotFoundException(ConnectionNotFoundException ex) {
+        ErrorResponse Error = new ErrorResponse(
+                ex.getMessage(),
+                ErrorCodes.RESOURCE_NOT_FOUND,
+                LocalTime.now()
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Error);
+    }
+
+    @ExceptionHandler(FollowSelfNotAllowedException.class)
+    public ResponseEntity<ErrorResponse> handleFollowSelfNotAllowedException(FollowSelfNotAllowedException ex) {
+        ErrorResponse Error = new ErrorResponse(
+                ex.getMessage(),
+                ErrorCodes.FOLLOW_SELF_NOT_ALLOWED,
+                LocalTime.now()
+        );
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Error);
     }
 
 
