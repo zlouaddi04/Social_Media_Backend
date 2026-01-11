@@ -4,6 +4,15 @@ package org.one.corporatesocialmediaapp_backend.Exceptions;
 import org.hibernate.exception.ConstraintViolationException;
 import org.one.corporatesocialmediaapp_backend.DTO.ErrorResponse;
 import org.one.corporatesocialmediaapp_backend.Enums.ErrorCodes;
+import org.one.corporatesocialmediaapp_backend.Exceptions.CommentExceptions.CommentContentEmptyException;
+import org.one.corporatesocialmediaapp_backend.Exceptions.CommentExceptions.CommentDeleteNotAllowedException;
+import org.one.corporatesocialmediaapp_backend.Exceptions.CommentExceptions.CommentNotFoundException;
+import org.one.corporatesocialmediaapp_backend.Exceptions.LikeExceptions.LikeAlreadyExistsException;
+import org.one.corporatesocialmediaapp_backend.Exceptions.LikeExceptions.LikeNotFoundException;
+import org.one.corporatesocialmediaapp_backend.Exceptions.PostExceptions.PostContentEmptyException;
+import org.one.corporatesocialmediaapp_backend.Exceptions.PostExceptions.PostDeleteNotAllowedException;
+import org.one.corporatesocialmediaapp_backend.Exceptions.PostExceptions.PostNotFoundException;
+import org.one.corporatesocialmediaapp_backend.Exceptions.PostExceptions.PostUpdateNotAllowedException;
 import org.one.corporatesocialmediaapp_backend.Exceptions.StorageExceptions.ImageUploadException;
 import org.one.corporatesocialmediaapp_backend.Exceptions.StorageExceptions.InvalidImageException;
 import org.one.corporatesocialmediaapp_backend.Exceptions.UserExceptions.UserAlreadyExists;
@@ -64,6 +73,104 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(Error);
     }
 
+
+    // ==========POST_EXCEPTIONS==========
+
+    @ExceptionHandler(PostNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handlePostNotFoundException(PostNotFoundException ex) {
+        ErrorResponse Error = new ErrorResponse(
+                ex.getMessage(),
+                ErrorCodes.POST_NOT_FOUND,
+                LocalTime.now()
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Error);
+    }
+
+    @ExceptionHandler(PostContentEmptyException.class)
+    public ResponseEntity<ErrorResponse> handlePostContentEmptyException(PostContentEmptyException ex) {
+        ErrorResponse Error = new ErrorResponse(
+                ex.getMessage(),
+                ErrorCodes.POST_CONTENT_EMPTY,
+                LocalTime.now()
+        );
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Error);
+    }
+
+    @ExceptionHandler(PostUpdateNotAllowedException.class)
+    public ResponseEntity<ErrorResponse> handlePostUpdateNotAllowedException(PostUpdateNotAllowedException ex) {
+        ErrorResponse Error = new ErrorResponse(
+                ex.getMessage(),
+                ErrorCodes.POST_UPDATE_NOT_ALLOWED,
+                LocalTime.now()
+        );
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Error);
+    }
+
+    @ExceptionHandler(PostDeleteNotAllowedException.class)
+    public ResponseEntity<ErrorResponse> handlePostDeleteNotAllowedException(PostDeleteNotAllowedException ex) {
+        ErrorResponse Error = new ErrorResponse(
+                ex.getMessage(),
+                ErrorCodes.POST_DELETE_NOT_ALLOWED,
+                LocalTime.now()
+        );
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Error);
+    }
+
+
+    // ==========COMMENT_EXCEPTIONS==========
+
+    @ExceptionHandler(CommentNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleCommentNotFoundException(CommentNotFoundException ex) {
+        ErrorResponse Error = new ErrorResponse(
+                ex.getMessage(),
+                ErrorCodes.COMMENT_NOT_FOUND,
+                LocalTime.now()
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Error);
+    }
+
+    @ExceptionHandler(CommentContentEmptyException.class)
+    public ResponseEntity<ErrorResponse> handleCommentContentEmptyException(CommentContentEmptyException ex) {
+        ErrorResponse Error = new ErrorResponse(
+                ex.getMessage(),
+                ErrorCodes.COMMENT_CONTENT_EMPTY,
+                LocalTime.now()
+        );
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Error);
+    }
+
+    @ExceptionHandler(CommentDeleteNotAllowedException.class)
+    public ResponseEntity<ErrorResponse> handleCommentDeleteNotAllowedException(CommentDeleteNotAllowedException ex) {
+        ErrorResponse Error = new ErrorResponse(
+                ex.getMessage(),
+                ErrorCodes.COMMENT_DELETE_NOT_ALLOWED,
+                LocalTime.now()
+        );
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Error);
+    }
+
+
+    // ==========LIKE_EXCEPTIONS==========
+
+    @ExceptionHandler(LikeAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponse> handleLikeAlreadyExistsException(LikeAlreadyExistsException ex) {
+        ErrorResponse Error = new ErrorResponse(
+                ex.getMessage(),
+                ErrorCodes.LIKE_ALREADY_EXISTS,
+                LocalTime.now()
+        );
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(Error);
+    }
+
+    @ExceptionHandler(LikeNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleLikeNotFoundException(LikeNotFoundException ex) {
+        ErrorResponse Error = new ErrorResponse(
+                ex.getMessage(),
+                ErrorCodes.LIKE_NOT_FOUND,
+                LocalTime.now()
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Error);
+    }
 
 
     // ==========STORAGE_EXCEPTIONS==========

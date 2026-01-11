@@ -20,6 +20,12 @@ public class LocalImageStorage implements ImageStorage{
     public String uploadProfilePicture(MultipartFile file) {
         return store(file, "images/profile-pictures");
     }
+
+    @Override
+    public String uploadPostImage(MultipartFile file) {
+        return store(file, "images/post-pictures");
+    }
+
     private String store(MultipartFile file, String subFolder) {
         validate(file);
 
