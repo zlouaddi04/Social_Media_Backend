@@ -5,7 +5,7 @@ target/
 !**/src/test/**/target/
 .env
 Uploads/
-application.properties
+*.properties
 
 ### STS ###
 .apt_generated
