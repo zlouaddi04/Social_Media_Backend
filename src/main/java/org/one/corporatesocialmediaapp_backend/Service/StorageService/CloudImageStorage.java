@@ -40,6 +40,26 @@ public class CloudImageStorage implements ImageStorage{
         }
     }
 
+    @Override
+    public String uploadPostImage(MultipartFile file) {
+        validateImage(file);
+
+        try {
+            Map result = cloudinary.uploader().upload(
+                    file.getBytes(),
+                    ObjectUtils.asMap(
+                            "folder", "posts/post-pictures",
+                            "resource_type", "image"
+                    )
+            );
+
+            return result.get("secure_url").toString();
+
+        } catch (IOException e) {
+            throw new ImageUploadException("Failed to upload post image");
+        }
+    }
+
     private void validateImage(MultipartFile file) {
         if (file.getSize() > 2_000_000)
             throw new InvalidImageException("Image too large");

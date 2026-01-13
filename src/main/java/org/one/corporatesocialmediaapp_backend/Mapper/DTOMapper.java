@@ -88,7 +88,7 @@ public class DTOMapper {
                 post.getImageUrl(),
                 post.getCreatedAt(),
                 post.getUpdatedAt(),
-                post.getAuthor().getUser_db_Id(),
+                toUserSummaryDTO(post.getAuthor()),
                 post.getLikes().size(),
                 post.getComments().size(),
                 post.getLikes()

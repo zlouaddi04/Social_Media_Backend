@@ -12,8 +12,7 @@ public record UpdatePostRequest(
         @NotBlank(message = "Content is required and cannot be blank")
         String content,
 
-        @NotBlank(message = "Image URL is required and cannot be blank")
-        String imageUrl
+        String imageUrl // Optional
 ) {
 }
 

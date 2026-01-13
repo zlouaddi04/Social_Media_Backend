@@ -1,9 +1,13 @@
 package org.one.corporatesocialmediaapp_backend.Service.AuthService;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import org.one.corporatesocialmediaapp_backend.Exceptions.AuthExceptions.AuthTokenExpiredException;
+import org.one.corporatesocialmediaapp_backend.Exceptions.AuthExceptions.AuthTokenInvalidException;
 import org.one.corporatesocialmediaapp_backend.Models.CustomUserDetails;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -36,19 +40,37 @@ public class JWTService {
     }
 
     public Claims extractAllClaims(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(getSigningKey())
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
+        try {
+            return Jwts.parserBuilder()
+                    .setSigningKey(getSigningKey())
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+        } catch (ExpiredJwtException e) {
+            throw new AuthTokenExpiredException("JWT token has expired");
+        } catch (JwtException e) {
+            throw new AuthTokenInvalidException("Invalid JWT token");
+        }
     }
 
     public String extractUsername(String token) {
-        return extractAllClaims(token).getSubject();
+        try {
+            return extractAllClaims(token).getSubject();
+        } catch (ExpiredJwtException e) {
+            throw new AuthTokenExpiredException("JWT token has expired");
+        } catch (JwtException e) {
+            throw new AuthTokenInvalidException("Invalid JWT token");
+        }
     }
 
     public boolean isTokenValid(String token, CustomUserDetails user) {
-        return extractUsername(token).equals(user.getUsername())
-                && !extractAllClaims(token).getExpiration().before(new Date());
+        try {
+            return extractUsername(token).equals(user.getUsername())
+                    && !extractAllClaims(token).getExpiration().before(new Date());
+        } catch (ExpiredJwtException e) {
+            throw new AuthTokenExpiredException("JWT token has expired");
+        } catch (JwtException e) {
+            throw new AuthTokenInvalidException("Invalid JWT token");
+        }
     }
 }
