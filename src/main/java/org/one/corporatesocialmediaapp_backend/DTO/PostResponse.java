@@ -9,7 +9,7 @@ public record PostResponse(
         String imageUrl,
         LocalDateTime createdAt,
         LocalDateTime updatedAt,
-        Long author_id,
+        UserSummaryDTO author,
         Integer likeCount,
         Integer commentCount,
         Boolean isLikedByCurrentUser,

@@ -32,7 +32,7 @@ public class UserController {
             @RequestParam("fullName") String fullName,
             @RequestParam("position") Position position,
             @RequestParam("department") Department department,
-            @RequestPart("profilePicture") MultipartFile profilePicture) {
+            @RequestPart(value = "profilePicture", required = false) MultipartFile profilePicture) {
 
         UserRegistrationRequest request = new UserRegistrationRequest(
                 username, email, password, fullName, position, department);

@@ -12,6 +12,8 @@ public record UserUpdateRequest(
         @NotBlank(message = "Full name is required and cannot be blank")
         String fullName,
 
+        String profilePicture, // Optional
+
         @NotNull(message = "Position is required")
         Position position,
 

@@ -48,7 +48,11 @@ public class AuthController {
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, cookie.toString())
-                .body(Map.of("message", "Login successful", "token", jwt));
+                .body(Map.of(
+                        "message", "Login successful",
+                        "token", jwt,
+                        "userId", user.getId()
+                ));
     }
 
 }

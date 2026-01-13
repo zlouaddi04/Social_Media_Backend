@@ -98,9 +98,11 @@ public class UserService {
         //MAPPING_TO_USER
         User newUser=dtoMapper.toUserEntity(Request);
 
-        //STORING_PROFILE_PICTURE
-        String imageURL=imageStorage.uploadProfilePicture(profilePicture);
-        newUser.setProfilePicture(imageURL);
+        //STORING_PROFILE_PICTURE (optional)
+        if (profilePicture != null && !profilePicture.isEmpty()) {
+            String imageURL = imageStorage.uploadProfilePicture(profilePicture);
+            newUser.setProfilePicture(imageURL);
+        }
 
         //HASHING_PASSWORD
         String hashed_password= passwordEncoder.encode(Request.password());

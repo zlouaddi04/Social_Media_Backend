@@ -4,6 +4,7 @@ package org.one.corporatesocialmediaapp_backend.Exceptions;
 import org.hibernate.exception.ConstraintViolationException;
 import org.one.corporatesocialmediaapp_backend.DTO.ErrorResponse;
 import org.one.corporatesocialmediaapp_backend.Enums.ErrorCodes;
+import org.one.corporatesocialmediaapp_backend.Exceptions.AuthExceptions.*;
 import org.one.corporatesocialmediaapp_backend.Exceptions.CommentExceptions.*;
 import org.one.corporatesocialmediaapp_backend.Exceptions.ConnectionExceptions.ConnectionAlreadyExistsException;
 import org.one.corporatesocialmediaapp_backend.Exceptions.ConnectionExceptions.ConnectionNotFoundException;
@@ -17,10 +18,17 @@ import org.one.corporatesocialmediaapp_backend.Exceptions.UserExceptions.*;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.time.LocalTime;
+import java.util.HashMap;
+import java.util.Map;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -66,6 +74,90 @@ public class GlobalExceptionHandler {
                 LocalTime.now()
         );
         return ResponseEntity.status(HttpStatus.CONFLICT).body(Error);
+    }
+
+
+    // ==========AUTH/JWT_EXCEPTIONS==========
+
+    @ExceptionHandler(AuthInvalidCredentialsException.class)
+    public ResponseEntity<ErrorResponse> handleAuthInvalidCredentialsException(AuthInvalidCredentialsException ex) {
+        ErrorResponse Error = new ErrorResponse(
+                ex.getMessage(),
+                ErrorCodes.AUTH_INVALID_CREDENTIALS,
+                LocalTime.now()
+        );
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Error);
+    }
+
+    @ExceptionHandler(AuthUnauthorizedException.class)
+    public ResponseEntity<ErrorResponse> handleAuthUnauthorizedException(AuthUnauthorizedException ex) {
+        ErrorResponse Error = new ErrorResponse(
+                ex.getMessage(),
+                ErrorCodes.AUTH_UNAUTHORIZED,
+                LocalTime.now()
+        );
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Error);
+    }
+
+    @ExceptionHandler(AuthForbiddenException.class)
+    public ResponseEntity<ErrorResponse> handleAuthForbiddenException(AuthForbiddenException ex) {
+        ErrorResponse Error = new ErrorResponse(
+                ex.getMessage(),
+                ErrorCodes.AUTH_FORBIDDEN,
+                LocalTime.now()
+        );
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Error);
+    }
+
+    @ExceptionHandler(AuthTokenExpiredException.class)
+    public ResponseEntity<ErrorResponse> handleAuthTokenExpiredException(AuthTokenExpiredException ex) {
+        ErrorResponse Error = new ErrorResponse(
+                ex.getMessage(),
+                ErrorCodes.AUTH_TOKEN_EXPIRED,
+                LocalTime.now()
+        );
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Error);
+    }
+
+    @ExceptionHandler(AuthTokenInvalidException.class)
+    public ResponseEntity<ErrorResponse> handleAuthTokenInvalidException(AuthTokenInvalidException ex) {
+        ErrorResponse Error = new ErrorResponse(
+                ex.getMessage(),
+                ErrorCodes.AUTH_TOKEN_INVALID,
+                LocalTime.now()
+        );
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Error);
+    }
+
+    // Spring Security exceptions
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<ErrorResponse> handleBadCredentialsException(BadCredentialsException ex) {
+        ErrorResponse Error = new ErrorResponse(
+                "Invalid username or password",
+                ErrorCodes.AUTH_INVALID_CREDENTIALS,
+                LocalTime.now()
+        );
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Error);
+    }
+
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleUsernameNotFoundException(UsernameNotFoundException ex) {
+        ErrorResponse Error = new ErrorResponse(
+                ex.getMessage(),
+                ErrorCodes.USER_NOT_FOUND,
+                LocalTime.now()
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Error);
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ErrorResponse> handleAuthenticationException(AuthenticationException ex) {
+        ErrorResponse Error = new ErrorResponse(
+                "Authentication failed: " + ex.getMessage(),
+                ErrorCodes.AUTH_UNAUTHORIZED,
+                LocalTime.now()
+        );
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Error);
     }
 
 
@@ -229,6 +321,23 @@ public class GlobalExceptionHandler {
 
 
     // ==========GENERAL_EXCEPTIONS==========
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorResponse> handleMethodArgumentNotValid(MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+        ex.getBindingResult().getAllErrors().forEach((error) -> {
+            String fieldName = ((FieldError) error).getField();
+            String errorMessage = error.getDefaultMessage();
+            errors.put(fieldName, errorMessage);
+        });
+
+        ErrorResponse Error = new ErrorResponse(
+                "Validation failed: " + errors,
+                ErrorCodes.VALIDATION_ERROR,
+                LocalTime.now()
+        );
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Error);
+    }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<ErrorResponse> handleDataIntegrity(DataIntegrityViolationException ex) {
